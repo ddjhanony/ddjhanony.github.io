@@ -37,18 +37,16 @@
             width: 100%;
             max-width: 28rem;
         }
-       .welcome-text {
-    font-size: 2rem;
-    font-weight: 2000;
-    text-align: center;
-    margin-bottom: 1rem; /* 可選: 減少 margin-bottom */
-    position: relative;  /* 使用 relative 進行位置調整 */
-    top: -20px;          /* 使用負值上移 */
-    color: white;
-    opacity: 0;
-    transform: translateY(-50px);
-    transition: opacity 1s, transform 1s;
-}
+        .welcome-text {
+            font-size: 2rem;
+            font-weight: 2000;
+            text-align: center;
+            margin-bottom: 2rem;
+            color: white;
+            opacity: 0;
+            transform: translateY(-50px);
+            transition: opacity 1s, transform 1s;
+        }
         .welcome-text.show {
             opacity: 1;
             transform: translateY(0);
