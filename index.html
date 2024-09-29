@@ -21,6 +21,9 @@
             background: #111827;
             transition: background-color 0.5s;
         }
+        .app.light {
+            background: linear-gradient(to bottom right, #4f46e5, #7e22ce, #ec4899);
+        }
         .theme-toggle {
             margin-bottom: 1rem;
             padding: 0.5rem;
@@ -33,15 +36,26 @@
         .theme-toggle:hover {
             transform: scale(1.1);
         }
+        .theme-toggle.light {
+            background-color: #4f46e5;
+        }
+        .theme-toggle .icon {
+            width: 1.5rem;
+            height: 1.5rem;
+            color: #111827;
+        }
+        .theme-toggle.light .icon {
+            color: white;
+        }
         .content {
             width: 100%;
             max-width: 28rem;
         }
         .welcome-text {
-            font-size: 2rem;
-            font-weight: 2000;
+            font-size: 3rem;
+            font-weight: 800;
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
             color: white;
             opacity: 0;
             transform: translateY(-50px);
@@ -155,6 +169,9 @@
 <body>
     <div id="app" class="app">
         <div class="content">
+            <button id="themeToggle" class="theme-toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+            </button>
             <h1 id="welcomeText" class="welcome-text">歡迎使用匿名大墩</h1>
             <div class="button-wrapper gradient-blue">
                 <button class="button" onclick="redirectToNGL()">
@@ -175,11 +192,11 @@
                 </button>
             </div>
             <div class="button-wrapper gradient-green">
-    <button class="button" onclick="window.location.href='https://forms.gle/m9yV8VSwDXP3buJf7'">
+    <button class="button" onclick="window.location.href='https://ddjh.tc.edu.tw'">
         <span class="button-text">
                 <path d="M3 3h18v18H3z"></path>
             </svg>
-            版務員徵選表單
+            大墩官網
         </span>
                             <svg xmlns="http://www.w3.org/2000/svg" class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
     </button>
@@ -194,6 +211,16 @@
         const welcomeText = document.getElementById('welcomeText');
         const buttons = document.querySelectorAll('.button');
         let lightMode = false;
+
+        function toggleLightMode() {
+            lightMode = !lightMode;
+            app.classList.toggle('light', lightMode);
+            themeToggle.classList.toggle('light', lightMode);
+            buttons.forEach(button => button.classList.toggle('light', lightMode));
+            themeToggle.innerHTML = lightMode 
+                ? '<svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>'
+                : '<svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>';
+        }
 
         themeToggle.addEventListener('click', toggleLightMode);
 
