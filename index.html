@@ -10,6 +10,8 @@
             padding: 0;
             font-family: Arial, sans-serif;
             height: 100%;
+            width: 100%;
+            overflow-x: hidden;
         }
         .app {
             display: flex;
@@ -20,19 +22,41 @@
             padding: 1.5rem;
             background: #111827;
             transition: background-color 0.5s;
+            width: 100%;
+            box-sizing: border-box;
         }
         .app.light {
             background: linear-gradient(to bottom right, #4f46e5, #7e22ce, #ec4899);
         }
         .header {
-            background-color: #1f2937; /* 暗色主題底色 */
-            padding: 1rem; /* 添加一些內邊距 */
-            width: 100%; /* 使標題寬度填滿 */
-            text-align: center; /* 文字置中 */
-            transition: background-color 0.5s; /* 添加過渡效果 */
+            background-color: #1f2937;
+            padding: 1rem;
+            width: 100%;
+            text-align: center;
+            transition: background-color 0.5s, transform 0.3s;
+            box-sizing: border-box;
         }
         .header.light {
-            background-color: #4f46e5; /* 光色主題底色 */
+            background-color: #4f46e5;
+        }
+        .header:hover {
+            transform: scale(1.05);
+        }
+        .header h2 {
+            color: white;
+            margin: 0;
+            font-size: 1.2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .header h2 svg {
+            width: 1.2rem;
+            height: 1.2rem;
+            margin-right: 0.5rem;
+            flex-shrink: 0;
         }
         .theme-toggle {
             margin-bottom: 1rem;
@@ -165,6 +189,9 @@
         .gradient-purple .button::after {
             background: linear-gradient(to right, #c084fc, #e879f9);
         }
+        .gradient-green .button::after {
+            background: linear-gradient(to right, #34d399, #10b981);
+        }
         .button.active::before {
             animation: pulse 2s infinite;
         }
@@ -176,7 +203,14 @@
 </head>
 <body>
     <div class="header">
-        <h2 style="color: white;">颱風快訊:台中市政府宣布10/1正常上班上課</h2> <!-- 標題 -->
+        <h2>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                <line x1="12" y1="9" x2="12" y2="13"></line>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+            颱風快訊：台中市政府宣布10/1正常上班上課
+        </h2>
     </div>
     <div id="app" class="app">
         <div class="content">
@@ -243,7 +277,7 @@
         function toggleLightMode() {
             lightMode = !lightMode;
             app.classList.toggle('light', lightMode);
-            document.querySelector('.header').classList.toggle('light', lightMode); // 切換標題底色
+            document.querySelector('.header').classList.toggle('light', lightMode);
             themeToggle.classList.toggle('light', lightMode);
             buttons.forEach(button => button.classList.toggle('light', lightMode));
             themeToggle.innerHTML = createSVG(lightMode);
