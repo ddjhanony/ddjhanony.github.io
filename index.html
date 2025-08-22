@@ -50,14 +50,25 @@
             max-width: 28rem;
         }
         .welcome-text {
-            font-size: 2.2rem;
-            font-weight: 800;
-            text-align: center;
-            margin-bottom: 4rem;
-            color: white;
-            opacity: 0;
-            transform: translateY(-50px);
-            transition: opacity 1s, transform 1s;
+    font-size: 2.2rem;
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 4rem;
+    color: white;
+    animation: fadeInDown 1s ease forwards; 
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
         }
         .welcome-text.show {
             opacity: 1;
@@ -164,7 +175,7 @@
 <body>
     <div class="header">
         <h2>
-          啊啊啊啊啊啊我終於把刪文申請表的icon換好了
+          啊啊啊啊我終於把刪文申請表的icon換好了
         </h2>
     </div>
     <div id="app" class="app">
