@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<!-- saved from url=(0028)https://ddjhanony.github.io/ -->
-<html lang="zh-TW"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>匿名大墩</title>
 
-    <link rel="icon" type="image/png" href="https://ddjhanony.github.io/images/unnamed.jpg">
+    <link rel="icon" type="image/png" href="images/ui.png">
 
     <style>
         body, html {
@@ -64,7 +64,7 @@
             font-size: 2.2rem;
             font-weight: 800;
             text-align: center;
-            margin-bottom: 4rem;
+            margin-bottom: 2.2rem;
             color: #1F2937;
             animation: fadeInDown 1s ease forwards; 
         }
@@ -191,12 +191,13 @@
             50% { opacity: 1; }
         }
         .welcome-image {
-        display: block;       
-        margin: 1rem auto 2rem;  
-        max-width: 200px;      
-        height: auto;          
-        margin-top: 0.5rem; 
+        display: block;
+        margin: 0.5rem auto 1rem; 
+        max-width: 200px;
+        height: auto;
+        margin-top: 0.1rem; 
         }
+
         .footer {
         text-align: center;
         padding: 13px 0;
@@ -211,20 +212,19 @@
 <body>
     <div class="header">
         <h2>
-          大家一起去填主頁連結的連署書<br>
-          維護自己的權益.ᐟ.ᐟ
+          好忙好忙好忙好忙
         </h2>
     </div>
     <div id="app" class="app">
         <div class="content">
 
  <a href="https://ddjh-anony.forteens.cc/admin/login" target="_blank">
-    <img src="./匿名大墩_files/logo.png" alt="Logo" class="welcome-image">
+    <img src="images/logo.png" alt="Logo" class="welcome-image">
 </a>
 
-            <h1 id="welcomeText" class="welcome-text show">歡迎使用匿名大墩</h1>
+            <h1 id="welcomeText" class="welcome-text">歡迎使用匿名大墩</h1>
             <div class="button-wrapper gradient-blue">
-                <button class="button" onclick="window.location.href=&#39;https://sites.google.com/view/ddjh-anony&#39;">
+                <button class="button" onclick="window.location.href='https://sites.google.com/view/ddjh-anony'">
                     <span class="button-text">
                         <svg xmlns="http://www.w3.org/2000/svg" class="button-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="12" cy="12" r="10"></circle>
@@ -239,7 +239,7 @@
                 </button>
             </div>
             <div class="button-wrapper gradient-purple">
-                <button class="button" onclick="window.location.href=&#39;https://ddjh-anony.forteens.cc&#39;">
+                <button class="button" onclick="window.location.href='https://ddjh-anony.forteens.cc'">
                     <span class="button-text">
                         <svg xmlns="http://www.w3.org/2000/svg" class="button-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
                         投稿連結
@@ -250,7 +250,7 @@
                 </button>
             </div>
             <div class="button-wrapper gradient-green">
-                <button class="button" onclick="window.location.href=&#39;https://sites.google.com/view/ddjh-anony/%E5%8C%BF%E5%90%8D%E5%A4%A7%E5%A2%A9%E7%9B%B8%E9%97%9C%E8%A6%8F%E7%AF%84/%E5%B7%B2%E7%99%BC%E5%B8%83%E6%8A%95%E7%A8%BF%E5%88%AA%E9%99%A4%E8%A6%8F%E7%AF%84?authuser=0&#39;">
+                <button class="button" onclick="window.location.href='https://sites.google.com/view/ddjh-anony/%E5%8C%BF%E5%90%8D%E5%A4%A7%E5%A2%A9%E7%9B%B8%E9%97%9C%E8%A6%8F%E7%AF%84/%E5%B7%B2%E7%99%BC%E5%B8%83%E6%8A%95%E7%A8%BF%E5%88%AA%E9%99%A4%E8%A6%8F%E7%AF%84?authuser=0'">
                     <span class="button-text">
                         <svg xmlns="http://www.w3.org/2000/svg" class="button-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
   <circle cx="12" cy="12" r="10"></circle>
@@ -263,6 +263,29 @@
                     </svg>
                 </button>
             </div>
+<div class="button-wrapper gradient-blue">
+    <button class="button" onclick="window.location.href='https://docs.google.com/forms/d/e/1FAIpQLScRCA3gJyM-Mz7R1uDPNz0pY_9GI9IhC58B-P-fM-ekG6ibVw/viewform'">
+        <span class="button-text">
+            <!-- 表單圖示（尺寸與其他按鈕完全相同） -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="button-icon" 
+                 viewBox="0 0 24 24" fill="none" stroke="currentColor" 
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="12 2 12 8 18 8"/>
+                <line x1="9" y1="13" x2="15" y2="13"/>
+                <line x1="9" y1="17" x2="15" y2="17"/>
+            </svg>
+            加入連署
+        </span>
+
+        <svg xmlns="http://www.w3.org/2000/svg" class="chevron" 
+             viewBox="0 0 24 24" fill="none" stroke="currentColor" 
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+    </button>
+</div>
+
         </div>
     </div>
     <script>
@@ -275,8 +298,7 @@
     </script>
        <footer class="footer">
            © 2025 匿名大墩 All Rights Reserved. <br>
-           Designed by 恩睿 (管理員 Rain)
+             <a href="https://www.instagram.com/rain.980520" target="_blank" style="color: #6b7280; text-decoration: none;"> Designed by 恩睿 (管理員 Rain)</a>
        </footer>
-
-
-<div id="trend_notification_app" class="trend_notification_app_outer"><div id="trend_notification"><div id="trend_notification_con"></div></div></div><div id="UMS_TOOLTIP" style="position: absolute; cursor: pointer; z-index: 2147483647; background: transparent; top: -100000px; left: -100000px;"></div></body><umsdataelement id="UMSDataElement" style="display: none;"></umsdataelement><div id="tmtoolbar_manual_rating_injected" style="display: none;">init</div><div id="UMSSendDataEventElement" style="display: none;">init</div></html>
+</body>
+</html>
