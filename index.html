@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!-- saved from url=(0028)https://ddjhanony.github.io/ -->
 <html lang="zh-TW"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -53,6 +52,8 @@
             align-items: center;
             justify-content: center;
             flex-wrap: wrap;
+            /* 讓數字等寬，避免倒數時文字跳動 */
+            font-variant-numeric: tabular-nums;
         }
         .content {
             width: 100%;
@@ -80,7 +81,6 @@
     }
 }
 
-        }
         .welcome-text.show {
             opacity: 1;
             transform: translateY(0);
@@ -190,36 +190,43 @@
             0%, 100% { opacity: 0.75; }
             50% { opacity: 1; }
         }
-        .welcome-image {
-        display: block;       
-        margin: 1rem auto 2rem;  
-        max-width: 200px;      
-        height: auto;          
-        margin-top: 0.5rem; 
+        
+        /* 確保 Logo 連結區塊也是區塊元素並置中 */
+        .logo-link {
+            display: block;
+            text-align: center;
         }
+
+        .welcome-image {
+            display: block;        
+            margin: 0.5rem auto 2rem auto; 
+            max-width: 200px;      
+            height: auto;          
+        }
+        
         .footer {
-        text-align: center;
-        padding: 13px 0;
-        font-size: 14px;
-        color: #6b7280;           
-        background-color: #f9fafb; 
-        line-height: 1.6;
+            text-align: center;
+            padding: 13px 0;
+            font-size: 14px;
+            color: #6b7280;            
+            background-color: #f9fafb; 
+            line-height: 1.6;
         }
 
     </style>
 </head>
 <body>
     <div class="header">
-        <h2>
-          刪文申請不要重複投 不會比較快喔
+        <h2 id="countdown">
+            載入中...
         </h2>
     </div>
     <div id="app" class="app">
         <div class="content">
 
- <a href="https://ddjh-anony.forteens.cc/admin/login" target="_blank">
-    <img src="./images/logo2.png" alt="Logo" class="welcome-image">
-</a>
+            <a href="https://ddjh-anony.forteens.cc/admin/login" target="_blank" class="logo-link">
+                <img src="./images/logo2.png" alt="Logo" class="welcome-image">
+            </a>
 
             <h1 id="welcomeText" class="welcome-text show">歡迎使用匿名大墩</h1>
             <div class="button-wrapper gradient-blue">
@@ -266,10 +273,44 @@
     </div>
     <script>
         const welcomeText = document.getElementById('welcomeText');
+        const countdownElement = document.getElementById('countdown');
+
+        // 倒數計時函式
+        function updateTimer() {
+            const now = new Date();
+            // 設定目標時間為 2026/01/01 00:00:00 台北時間 (UTC+8)
+            // 格式：YYYY-MM-DDTHH:mm:ss+08:00
+            const target = new Date("2026-01-01T00:00:00+08:00");
+            
+            const diff = target - now;
+
+            if (diff <= 0) {
+                countdownElement.innerText = "新年快樂！";
+                return;
+            }
+
+            // 計算時間
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            // 補零 (例如 5 -> 05)
+            const h = String(hours).padStart(2, '0');
+            const m = String(minutes).padStart(2, '0');
+            const s = String(seconds).padStart(2, '0');
+
+            countdownElement.innerText = `距離 2026 還有 ${days}天 ${h}:${m}:${s}`;
+        }
+
         window.onload = () => {
             setTimeout(() => {
                 welcomeText.classList.add('show');
             }, 1000);
+
+            // 啟動倒數計時
+            updateTimer();
+            setInterval(updateTimer, 1000);
         };
     </script>
        <footer class="footer">
