@@ -52,7 +52,6 @@
             align-items: center;
             justify-content: center;
             flex-wrap: wrap;
-            /* 讓數字等寬，避免倒數時文字跳動 */
             font-variant-numeric: tabular-nums;
         }
         .content {
@@ -191,7 +190,6 @@
             50% { opacity: 1; }
         }
         
-        /* 確保 Logo 連結區塊也是區塊元素並置中 */
         .logo-link {
             display: block;
             text-align: center;
@@ -275,11 +273,10 @@
         const welcomeText = document.getElementById('welcomeText');
         const countdownElement = document.getElementById('countdown');
 
-        // 倒數計時函式
+
         function updateTimer() {
             const now = new Date();
-            // 設定目標時間為 2026/01/01 00:00:00 台北時間 (UTC+8)
-            // 格式：YYYY-MM-DDTHH:mm:ss+08:00
+
             const target = new Date("2026-01-01T00:00:00+08:00");
             
             const diff = target - now;
@@ -289,18 +286,16 @@
                 return;
             }
 
-            // 計算時間
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            // 剩下的分鐘與秒數
             const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
-            // 補零 (例如 5 -> 05)
             const h = String(hours).padStart(2, '0');
             const m = String(minutes).padStart(2, '0');
             const s = String(seconds).padStart(2, '0');
 
-            countdownElement.innerText = `距離 2026 還有 ${days}天 ${h}:${m}:${s}`;
+            countdownElement.innerText = `距離 2026 還有 ${h}:${m}:${s}`;
         }
 
         window.onload = () => {
@@ -308,7 +303,6 @@
                 welcomeText.classList.add('show');
             }, 1000);
 
-            // 啟動倒數計時
             updateTimer();
             setInterval(updateTimer, 1000);
         };
