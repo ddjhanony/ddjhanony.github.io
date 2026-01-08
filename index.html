@@ -31,7 +31,7 @@
             background: transparent;
         }
         .header {
-            background-color: #5B5B5B;
+            background-color: #5B5B5B; /* 深灰背景 */
             color: #FFFFFF;
             padding: 1rem;
             width: 100%;
@@ -59,16 +59,17 @@
             font-variant-numeric: tabular-nums;
         }
         
+        /* --- 這裡修改了標籤顏色 --- */
         .count-badge {
-            background-color: #38bdf8; 
-            color: #ffffff;            
-            padding: 0.2rem 0.7rem;    
-            border-radius: 9999px;     
+            background-color: #E5E7EB; /* 亮銀灰色底，不像紅色刺眼，也不像藍色突兀 */
+            color: #374151;            /* 深灰色字體，對比清晰 */
+            padding: 0.2rem 0.6rem;
+            border-radius: 6px;        /* 改成稍微方一點的圓角，比較有現代感 */
             margin: 0 0.5rem;
-            font-weight: bold;
-            font-size: 0.95em;         
-            box-shadow: 0 0 10px rgba(56, 189, 248, 0.4); 
-            text-shadow: none;         
+            font-weight: 800;          /* 字體加粗 */
+            font-size: 0.9em;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.3); /* 輕微的立體感 */
+            border: 1px solid #9CA3AF; /* 淡淡的灰色邊框增加精緻度 */
         }
 
         .content {
@@ -93,73 +94,44 @@
 
         .welcome-text.show { opacity: 1; transform: translateY(0); }
         
-        /* --- 按鈕樣式修改區域 --- */
+        /* --- 按鈕樣式 (已還原為灰色) --- */
         .button-wrapper {
-            position: relative; 
-            margin-bottom: 1.5rem; 
-            transition: transform 0.3s ease;
+            position: relative; margin-bottom: 1.5rem; transition: transform 0.3s ease;
         }
-        
-        .button-wrapper:hover { transform: translateY(-3px); }
-        
-        /* 按鈕背後的光暈 (保留但顏色對應) */
+        .button-wrapper:hover { transform: translateY(-5px); }
         .button-wrapper::before {
             content: ''; position: absolute; inset: 0; border-radius: 1rem;
-            opacity: 0.6; filter: blur(12px); transition: opacity 0.5s;
-            z-index: -1;
-            transform: translateY(4px); /* 光暈稍微往下移一點 */
+            opacity: 0.75; filter: blur(1rem); transition: opacity 1s;
         }
-        .button-wrapper:hover::before { opacity: 0.9; }
-
-        /* 定義光暈顏色 */
-        .gradient-blue::before { background: #3b82f6; }
-        .gradient-purple::before { background: #8b5cf6; }
-        .gradient-green::before { background: #10b981; }
+        .button-wrapper:hover::before { opacity: 1; }
+        
+        /* 這些漸層只影響按鈕背後的「光暈」，按鈕本體還是灰色的 */
+        .gradient-blue::before { background: linear-gradient(to right, #9CA3AF, #4B5563); }
+        .gradient-purple::before { background: linear-gradient(to right, #D1D5DB, #6B7280); }
+        .gradient-green::before { background: linear-gradient(to right, #E5E7EB, #9CA3AF); }
         
         .button {
             position: relative; width: 100%; padding: 1.5rem 2rem;
-            /* 移除原本的灰色，改為透明，背景由下方的個別設定決定 */
+            background-color: #4B5563; /* 還原：深灰色按鈕 */
             color: #FFFFFF; border-radius: 1rem;
             border: none; font-size: 1.5rem; font-weight: 700;
             display: flex; align-items: center; justify-content: space-between;
-            overflow: hidden; cursor: pointer; transition: filter 0.3s ease;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            overflow: hidden; cursor: pointer; transition: all 0.3s ease-in-out;
         }
-
-        /* 讓按鈕 hover 時稍微亮一點 */
-        .button:hover { filter: brightness(1.1); }
-
-        /* --- 這裡設定按鈕的顏色 --- */
+        .button:hover { background: #374151; } /* Hover 時稍微變深 */
         
-        /* 藍色按鈕 (官網) */
-        .gradient-blue .button {
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-        }
-
-        /* 紫色按鈕 (投稿) */
-        .gradient-purple .button {
-            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-        }
-
-        /* 綠色按鈕 (刪文) */
-        .gradient-green .button {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-        }
-
-        .button-text { display: flex; align-items: center; text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
-        .button-icon { width: 1.5rem; height: 1.5rem; margin-right: 0.75rem; transition: transform 0.3s ease; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2)); }
+        .button-text { display: flex; align-items: center; }
+        .button-icon { width: 1.5rem; height: 1.5rem; margin-right: 0.75rem; transition: transform 0.3s ease; }
         .button:hover .button-icon { transform: rotate(15deg); }
-        .chevron { width: 1.75rem; height: 1.75rem; transition: transform 0.3s ease; opacity: 0.9; }
+        .chevron { width: 1.75rem; height: 1.75rem; transition: transform 0.3s ease; }
         .button:hover .chevron { transform: translateX(5px); }
-        
-        /* 按鈕內部的反光質感 (稍微減弱一點以免太花) */
         .button::after {
             content: ''; position: absolute; inset: 0; opacity: 0; transition: opacity 0.3s;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(to bottom, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
-            border-radius: inherit; pointer-events: none;
+            top: -3px; left: -3px; right: -3px; bottom: -3px;
+            background: linear-gradient(135deg, #9CA3AF, #374151);
+            border-radius: inherit; z-index: -1; filter: blur(8px); opacity: 0.8;
         }
-        .button:hover::after { opacity: 1; }
+        .button:hover::after { opacity: 0.2; }
         
         .logo-link { display: block; text-align: center; }
         .welcome-image {
@@ -259,6 +231,7 @@
                 }
 
                 if (foundNumber !== null) {
+                    // 顯示數字，樣式已更新為銀白色
                     headerTitle.innerHTML = `待審核: <span class="count-badge">${foundNumber}</span> 篇`;
                 } else {
                     headerTitle.innerText = "匿名大墩 (無法取得數據)";
