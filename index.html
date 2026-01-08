@@ -143,12 +143,19 @@
         content: '';
         animation: dots 1.5s steps(3, end) infinite;
         }
-
         @keyframes dots {
         0%   { content: ''; }
         33%  { content: '.'; }
         66%  { content: '..'; }
         100% { content: '...'; }
+        }
+        .loading-dots {
+        cursor: pointer;
+        user-select: none;
+        }
+        .loading-dots:hover {
+        text-decoration: underline;
+        opacity: 0.85;
         }
 
     </style>
@@ -213,21 +220,34 @@ const CACHE_KEY = 'pendingCount';
 const CACHE_TIME_KEY = 'pendingTime';
 const CACHE_EXPIRE = 60 * 1000; // 1 分鐘
 
-// 1️⃣ 一開始顯示「資料更新中…」
+// 顯示 loading（可點擊）
+function showLoading() {
+  headerTitle.innerHTML =
+    '<span class="loading-dots" onclick="forceReload()">資料更新中</span>';
+}
+
+// 強制重新抓（點擊用）
+function forceReload() {
+  localStorage.removeItem(CACHE_TIME_KEY);
+  showLoading();
+  updatePendingCount(true);
+}
+
+// 1️⃣ 初始顯示
 (function () {
   const cached = localStorage.getItem(CACHE_KEY);
   if (cached) {
     headerTitle.innerHTML =
       `待審核: <span class="count-badge">${cached}</span> 篇`;
   } else {
-    headerTitle.innerHTML = '<span class="loading-dots">資料更新中</span>';
+    showLoading();
   }
 })();
 
-// 2️⃣ 背景更新
-async function updatePendingCount() {
+// 2️⃣ 抓資料
+async function updatePendingCount(force = false) {
   const lastTime = localStorage.getItem(CACHE_TIME_KEY);
-  if (lastTime && Date.now() - lastTime < CACHE_EXPIRE) return;
+  if (!force && lastTime && Date.now() - lastTime < CACHE_EXPIRE) return;
 
   const targetUrl = 'https://ddjh-anony.forteens.cc';
   const proxyUrl =
@@ -245,7 +265,6 @@ async function updatePendingCount() {
 
     const count = match[1];
 
-    // ✅ 成功後才顯示數字
     headerTitle.innerHTML =
       `待審核: <span class="count-badge">${count}</span> 篇`;
 
@@ -253,18 +272,16 @@ async function updatePendingCount() {
     localStorage.setItem(CACHE_TIME_KEY, Date.now());
 
   } catch (e) {
-    // 失敗也維持「資料更新中…」
-    console.log('抓取失敗');
+    // 失敗時仍顯示 loading，可再點
+    showLoading();
   }
 }
 
-// 3️⃣ 頁面載入後執行
+// 3️⃣ 頁面載入後自動抓
 window.addEventListener('load', () => {
   setTimeout(updatePendingCount, 300);
 });
 </script>
-
-
     <footer class="footer">
         © 2025 匿名大墩 All Rights Reserved. <br>
         Designed by 恩睿 (管理員 Rain)
