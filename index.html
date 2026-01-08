@@ -193,62 +193,73 @@
         </div>
     </div>
 
-   <script>
+<script>
 const headerTitle = document.getElementById('header-title');
 
+// ===== 快取設定 =====
 const CACHE_KEY = 'pendingCount';
-const CACHE_TIME_KEY = 'pendingCountTime';
+const CACHE_TIME_KEY = 'pendingTime';
 const CACHE_EXPIRE = 60 * 1000; // 1 分鐘
 
-(function showCacheFirst() {
+// 1️⃣ 先顯示快取（秒開）
+(function () {
   const cached = localStorage.getItem(CACHE_KEY);
-  if (cached !== null) {
-    headerTitle.innerHTML = `待審核: <span class="count-badge">${cached}</span> 篇`;
+  if (cached) {
+    headerTitle.innerHTML =
+      `待審核: <span class="count-badge">${cached}</span> 篇`;
   } else {
     headerTitle.innerText = '匿名大墩';
   }
 })();
 
-       async function updateHeaderWithStatus() {
+// 2️⃣ 背景更新
+async function updatePendingCount() {
   const lastTime = localStorage.getItem(CACHE_TIME_KEY);
-  if (lastTime && Date.now() - lastTime < CACHE_EXPIRE) {
-    return; 
-  }
+  if (lastTime && Date.now() - lastTime < CACHE_EXPIRE) return;
 
   const targetUrl = 'https://ddjh-anony.forteens.cc';
-  const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
+  const proxyUrl =
+    'https://api.allorigins.win/get?url=' + encodeURIComponent(targetUrl);
 
   try {
     const res = await fetch(proxyUrl, { cache: 'no-store' });
     const data = await res.json();
     if (!data.contents) return;
 
-    const doc = new DOMParser().parseFromString(data.contents, 'text/html');
+    const html = data.contents;
 
-    const elements = [...doc.querySelectorAll('*')];
-    const target = elements.find(el => el.textContent.includes('待審核'));
+    // ✅ 關鍵：直接從原始碼抓「待審核」後面的數字
+    const index = html.indexOf('待審核');
+    if (index === -1) return;
 
-    if (!target) return;
+    // 從「待審核」後面取 100 個字元（很夠了）
+    const slice = html.slice(index, index + 100);
 
-    const match = target.textContent.match(/(\d+)/);
+    // 抓第一個數字
+    const match = slice.match(/(\d+)/);
     if (!match) return;
 
     const count = match[1];
 
-    headerTitle.innerHTML = `待審核: <span class="count-badge">${count}</span> 篇`;
+    // 更新畫面
+    headerTitle.innerHTML =
+      `待審核: <span class="count-badge">${count}</span> 篇`;
 
+    // 存快取
     localStorage.setItem(CACHE_KEY, count);
     localStorage.setItem(CACHE_TIME_KEY, Date.now());
 
   } catch (e) {
-    console.log('讀取失敗，但不影響使用');
+    console.log('抓取失敗（忽略）');
   }
 }
 
+// 3️⃣ 頁面載入後執行（不擋畫面）
 window.addEventListener('load', () => {
-  setTimeout(updateHeaderWithStatus, 300); // 不阻塞畫面
+  setTimeout(updatePendingCount, 300);
 });
 </script>
+
 
     <footer class="footer">
         © 2025 匿名大墩 All Rights Reserved. <br>
