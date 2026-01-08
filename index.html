@@ -38,10 +38,14 @@
             text-align: center;
             transition: transform 0.3s;
             box-sizing: border-box;
-            margin-bottom: 0; /* 修改這裡，讓狀態列緊貼 */
+            margin-bottom: 0.5rem;
+            min-height: 3.5rem; /* 固定高度避免跳動 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .header:hover {
-            transform: scale(1.05);
+            transform: scale(1.02); /*稍微縮小放大效果，比較不暈 */
         }
         .header h2 {
             color: white;
@@ -54,29 +58,21 @@
             flex-wrap: wrap;
             font-variant-numeric: tabular-nums;
         }
-
-        /* 新增：狀態列樣式 */
-        .status-bar {
-            width: 100%;
-            background-color: #e5e7eb;
-            color: #374151;
-            text-align: center;
-            padding: 0.5rem;
-            font-size: 0.9rem;
+        
+        /* 強調數字的樣式 */
+        .count-badge {
+            background-color: #ef4444;
+            color: white;
+            padding: 0.1rem 0.6rem;
+            border-radius: 1rem;
+            margin: 0 0.5rem;
             font-weight: bold;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            margin-bottom: 0.5rem;
-            display: none; /* 預設隱藏，抓到資料才顯示 */
-        }
-        .status-highlight {
-            color: #ef4444; /* 紅色強調數字 */
-            font-size: 1.1em;
         }
 
         .content {
             width: 100%;
             max-width: 28rem;
-            margin-top: 1rem;
+            margin-top: 0rem;
             background: none;
         }
         .welcome-text {
@@ -95,11 +91,9 @@
 
         .welcome-text.show { opacity: 1; transform: translateY(0); }
         
-        /* Button Styles (保持不變) */
+        /* 按鈕樣式 (保持不變) */
         .button-wrapper {
-            position: relative;
-            margin-bottom: 1.5rem;
-            transition: transform 0.3s ease;
+            position: relative; margin-bottom: 1.5rem; transition: transform 0.3s ease;
         }
         .button-wrapper:hover { transform: translateY(-5px); }
         .button-wrapper::before {
@@ -144,12 +138,11 @@
     </style>
 </head>
 <body>
-    <div class="header">
-        <h2 id="countdown">載入中...</h2>
-    </div>
-
-    <div id="pending-status-bar" class="status-bar">
-        讀取中...
+    
+    <div class="header" onclick="location.reload()" style="cursor: pointer;">
+        <h2 id="header-title">
+            匿名大墩
+        </h2>
     </div>
 
     <div id="app" class="app">
@@ -196,99 +189,74 @@
         </div>
     </div>
 
-<script>
+    <script>
         const welcomeText = document.getElementById('welcomeText');
-        const countdownElement = document.getElementById('countdown');
-        const statusElement = document.getElementById('pending-status-bar');
+        const headerTitle = document.getElementById('header-title');
 
-        // 更新倒數計時 (維持不變)
-        function updateTimer() {
-            const now = new Date();
-            const target = new Date("2026-01-01T00:00:00+08:00");
-            const diff = target - now;
+        async function updateHeaderWithStatus() {
+            // 步驟 1: 更新 Header 為讀取狀態
+            headerTitle.innerHTML = "正在讀取待審核數...";
 
-            if (diff <= 0) {
-                countdownElement.innerText = "新年快樂！";
-                return;
-            }
-            const hours = Math.floor(diff / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-            countdownElement.innerText = `距離 2026 還有 ${String(hours).padStart(2,'0')}:${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
-        }
-
-        // --- 核心功能：抓取待審核數量 (含重試機制) ---
-        async function fetchPendingPosts(retries = 3) {
             const targetUrl = 'https://ddjh-anony.forteens.cc';
-            // 使用 AllOrigins 的 JSON 模式
-            const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}&time=${Date.now()}`;
-
-            // 顯示讀取狀態 (只有第一次顯示)
-            if (statusElement.innerText === '讀取中...') {
-                statusElement.style.display = 'block';
-            }
+            // 加入隨機數避免暫存 (Cache Busting)
+            const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}&rand=${Math.random()}`;
 
             try {
                 const response = await fetch(proxyUrl);
-                if (!response.ok) throw new Error('Proxy error');
+                if (!response.ok) throw new Error('Proxy Network Error');
                 
                 const data = await response.json();
-                if (!data.contents) throw new Error('No content');
+                if (!data.contents) throw new Error('Empty Content');
 
+                // 步驟 2: 解析 HTML
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(data.contents, 'text/html');
 
-                // --- 改良後的精準定位邏輯 ---
-                // 根據您提供的 code: <div class="... bg-sky-300 ..."> 50 <br> <span>待審核</span> ...
-                // 我們尋找同時包含 "bg-sky-300" 和 "待審核" 的元素
-                
-                // 1. 抓取所有 bg-sky-300 的 div (這是該網站特有的顏色樣式)
-                const potentialElements = doc.querySelectorAll('.bg-sky-300');
+                // 步驟 3: 終極搜尋法 (不依賴 class 名稱)
+                // 我們直接搜尋頁面上所有的 span 標籤，找出內容是 "待審核" 的那個
+                const allSpans = doc.querySelectorAll('span');
                 let foundNumber = null;
 
-                for (let el of potentialElements) {
-                    // 2. 檢查裡面有沒有 "待審核" 三個字
-                    if (el.textContent.includes('待審核')) {
-                        // 3. 取得數字。
-                        // 原本結構是: "50<br><span>待審核</span>"
-                        // 所以數字在第一段文字節點 (text node)
-                        // 我們直接用正則表達式把所有非數字的字元清掉，剩下的就是答案
-                        const num = el.innerText.replace(/[^0-9]/g, '');
-                        if (num) {
-                            foundNumber = num;
-                            break; 
+                for (let span of allSpans) {
+                    if (span.textContent.trim() === '待審核') {
+                        // 找到 "待審核" 後，去看它的父元素 (Parent)
+                        // 結構通常是: <div> 50 <br> <span>待審核</span> </div>
+                        const parentText = span.parentElement ? span.parentElement.innerText : '';
+                        
+                        // 把父元素裡面的所有文字抓出來，移除掉非數字的東西
+                        const match = parentText.match(/(\d+)/); 
+                        if (match) {
+                            foundNumber = match[0];
+                            break; // 找到了就收工
                         }
                     }
                 }
 
+                // 步驟 4: 更新 Header 顯示
                 if (foundNumber !== null) {
-                    statusElement.innerHTML = `目前有 <span class="status-highlight">${foundNumber}</span> 篇投稿待審核`;
-                    statusElement.style.color = "#374151"; // 恢復正常顏色
+                    // 成功：顯示數字，並加上紅色背景強調
+                    headerTitle.innerHTML = `待審核: <span class="count-badge">${foundNumber}</span> 篇`;
                 } else {
-                    throw new Error('找不到數字結構');
+                    // 抓到了網頁但找不到數字 (可能結構變了)
+                    // 為了不讓使用者困惑，恢復顯示網站名稱
+                    headerTitle.innerText = "匿名大墩 (無法取得數據)";
+                    console.log("Parsing failed: Cannot find number structure");
                 }
 
             } catch (error) {
-                console.warn(`抓取失敗，剩餘重試次數: ${retries}`, error);
-                
-                if (retries > 0) {
-                    statusElement.innerText = `連線忙碌中，正在重試 (${retries})...`;
-                    // 等待 2 秒後遞迴重試
-                    setTimeout(() => fetchPendingPosts(retries - 1), 2000);
-                } else {
-                    // 真的徹底失敗後的顯示
-                    statusElement.innerHTML = "無法取得數據，<a href='https://ddjh-anony.forteens.cc' target='_blank' style='color: #4B5563; text-decoration: underline;'>點此直接查看</a>";
-                }
+                console.error('Fetch error:', error);
+                // 失敗：恢復顯示原本的標題
+                headerTitle.innerText = "匿名大墩";
             }
         }
 
         window.onload = () => {
-            setTimeout(() => welcomeText.classList.add('show'), 1000);
-            updateTimer();
-            setInterval(updateTimer, 1000);
+            setTimeout(() => {
+                welcomeText.classList.add('show');
+            }, 1000);
             
             // 執行抓取
-            fetchPendingPosts();
+            updateHeaderWithStatus();
         };
     </script>
     <footer class="footer">
