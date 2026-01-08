@@ -39,13 +39,13 @@
             transition: transform 0.3s;
             box-sizing: border-box;
             margin-bottom: 0.5rem;
-            min-height: 3.5rem; /* 固定高度避免跳動 */
+            min-height: 3.5rem;
             display: flex;
             align-items: center;
             justify-content: center;
         }
         .header:hover {
-            transform: scale(1.02); /*稍微縮小放大效果，比較不暈 */
+            transform: scale(1.02);
         }
         .header h2 {
             color: white;
@@ -59,14 +59,16 @@
             font-variant-numeric: tabular-nums;
         }
         
-        /* 強調數字的樣式 */
         .count-badge {
-            background-color: #ef4444;
-            color: white;
-            padding: 0.1rem 0.6rem;
-            border-radius: 1rem;
+            background-color: #38bdf8; 
+            color: #ffffff;            
+            padding: 0.2rem 0.7rem;    
+            border-radius: 9999px;     
             margin: 0 0.5rem;
             font-weight: bold;
+            font-size: 0.95em;         
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.4); 
+            text-shadow: none;         
         }
 
         .content {
@@ -91,40 +93,73 @@
 
         .welcome-text.show { opacity: 1; transform: translateY(0); }
         
-        /* 按鈕樣式 (保持不變) */
+        /* --- 按鈕樣式修改區域 --- */
         .button-wrapper {
-            position: relative; margin-bottom: 1.5rem; transition: transform 0.3s ease;
+            position: relative; 
+            margin-bottom: 1.5rem; 
+            transition: transform 0.3s ease;
         }
-        .button-wrapper:hover { transform: translateY(-5px); }
+        
+        .button-wrapper:hover { transform: translateY(-3px); }
+        
+        /* 按鈕背後的光暈 (保留但顏色對應) */
         .button-wrapper::before {
             content: ''; position: absolute; inset: 0; border-radius: 1rem;
-            opacity: 0.75; filter: blur(1rem); transition: opacity 1s;
+            opacity: 0.6; filter: blur(12px); transition: opacity 0.5s;
+            z-index: -1;
+            transform: translateY(4px); /* 光暈稍微往下移一點 */
         }
-        .button-wrapper:hover::before { opacity: 1; }
-        .gradient-blue::before { background: linear-gradient(to right, #9CA3AF, #4B5563); }
-        .gradient-purple::before { background: linear-gradient(to right, #D1D5DB, #6B7280); }
-        .gradient-green::before { background: linear-gradient(to right, #E5E7EB, #9CA3AF); }
+        .button-wrapper:hover::before { opacity: 0.9; }
+
+        /* 定義光暈顏色 */
+        .gradient-blue::before { background: #3b82f6; }
+        .gradient-purple::before { background: #8b5cf6; }
+        .gradient-green::before { background: #10b981; }
         
         .button {
             position: relative; width: 100%; padding: 1.5rem 2rem;
-            background-color: #4B5563; color: #FFFFFF; border-radius: 1rem;
+            /* 移除原本的灰色，改為透明，背景由下方的個別設定決定 */
+            color: #FFFFFF; border-radius: 1rem;
             border: none; font-size: 1.5rem; font-weight: 700;
             display: flex; align-items: center; justify-content: space-between;
-            overflow: hidden; cursor: pointer; transition: all 0.3s ease-in-out;
+            overflow: hidden; cursor: pointer; transition: filter 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
-        .button:hover { background: #374151; }
-        .button-text { display: flex; align-items: center; }
-        .button-icon { width: 1.5rem; height: 1.5rem; margin-right: 0.75rem; transition: transform 0.3s ease; }
+
+        /* 讓按鈕 hover 時稍微亮一點 */
+        .button:hover { filter: brightness(1.1); }
+
+        /* --- 這裡設定按鈕的顏色 --- */
+        
+        /* 藍色按鈕 (官網) */
+        .gradient-blue .button {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        }
+
+        /* 紫色按鈕 (投稿) */
+        .gradient-purple .button {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+        }
+
+        /* 綠色按鈕 (刪文) */
+        .gradient-green .button {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+
+        .button-text { display: flex; align-items: center; text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+        .button-icon { width: 1.5rem; height: 1.5rem; margin-right: 0.75rem; transition: transform 0.3s ease; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2)); }
         .button:hover .button-icon { transform: rotate(15deg); }
-        .chevron { width: 1.75rem; height: 1.75rem; transition: transform 0.3s ease; }
+        .chevron { width: 1.75rem; height: 1.75rem; transition: transform 0.3s ease; opacity: 0.9; }
         .button:hover .chevron { transform: translateX(5px); }
+        
+        /* 按鈕內部的反光質感 (稍微減弱一點以免太花) */
         .button::after {
             content: ''; position: absolute; inset: 0; opacity: 0; transition: opacity 0.3s;
-            top: -3px; left: -3px; right: -3px; bottom: -3px;
-            background: linear-gradient(135deg, #9CA3AF, #374151);
-            border-radius: inherit; z-index: -1; filter: blur(8px); opacity: 0.8;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+            border-radius: inherit; pointer-events: none;
         }
-        .button:hover::after { opacity: 0.2; }
+        .button:hover::after { opacity: 1; }
         
         .logo-link { display: block; text-align: center; }
         .welcome-image {
@@ -194,11 +229,9 @@
         const headerTitle = document.getElementById('header-title');
 
         async function updateHeaderWithStatus() {
-            // 步驟 1: 更新 Header 為讀取狀態
             headerTitle.innerHTML = "正在讀取待審核數...";
 
             const targetUrl = 'https://ddjh-anony.forteens.cc';
-            // 加入隨機數避免暫存 (Cache Busting)
             const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}&rand=${Math.random()}`;
 
             try {
@@ -208,44 +241,31 @@
                 const data = await response.json();
                 if (!data.contents) throw new Error('Empty Content');
 
-                // 步驟 2: 解析 HTML
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(data.contents, 'text/html');
 
-                // 步驟 3: 終極搜尋法 (不依賴 class 名稱)
-                // 我們直接搜尋頁面上所有的 span 標籤，找出內容是 "待審核" 的那個
                 const allSpans = doc.querySelectorAll('span');
                 let foundNumber = null;
 
                 for (let span of allSpans) {
                     if (span.textContent.trim() === '待審核') {
-                        // 找到 "待審核" 後，去看它的父元素 (Parent)
-                        // 結構通常是: <div> 50 <br> <span>待審核</span> </div>
                         const parentText = span.parentElement ? span.parentElement.innerText : '';
-                        
-                        // 把父元素裡面的所有文字抓出來，移除掉非數字的東西
                         const match = parentText.match(/(\d+)/); 
                         if (match) {
                             foundNumber = match[0];
-                            break; // 找到了就收工
+                            break; 
                         }
                     }
                 }
 
-                // 步驟 4: 更新 Header 顯示
                 if (foundNumber !== null) {
-                    // 成功：顯示數字，並加上紅色背景強調
                     headerTitle.innerHTML = `待審核: <span class="count-badge">${foundNumber}</span> 篇`;
                 } else {
-                    // 抓到了網頁但找不到數字 (可能結構變了)
-                    // 為了不讓使用者困惑，恢復顯示網站名稱
                     headerTitle.innerText = "匿名大墩 (無法取得數據)";
-                    console.log("Parsing failed: Cannot find number structure");
                 }
 
             } catch (error) {
                 console.error('Fetch error:', error);
-                // 失敗：恢復顯示原本的標題
                 headerTitle.innerText = "匿名大墩";
             }
         }
@@ -255,7 +275,6 @@
                 welcomeText.classList.add('show');
             }, 1000);
             
-            // 執行抓取
             updateHeaderWithStatus();
         };
     </script>
