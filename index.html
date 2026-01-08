@@ -59,17 +59,16 @@
             font-variant-numeric: tabular-nums;
         }
         
-        /* --- 這裡修改了標籤顏色 --- */
         .count-badge {
-            background-color: #E5E7EB; /* 亮銀灰色底，不像紅色刺眼，也不像藍色突兀 */
-            color: #374151;            /* 深灰色字體，對比清晰 */
+            background-color: #E5E7EB; 
+            color: #374151;            
             padding: 0.2rem 0.6rem;
-            border-radius: 6px;        /* 改成稍微方一點的圓角，比較有現代感 */
+            border-radius: 6px;       
             margin: 0 0.5rem;
-            font-weight: 800;          /* 字體加粗 */
+            font-weight: 800;          
             font-size: 0.9em;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.3); /* 輕微的立體感 */
-            border: 1px solid #9CA3AF; /* 淡淡的灰色邊框增加精緻度 */
+            box-shadow: 0 1px 2px rgba(0,0,0,0.3); 
+            border: 1px solid #9CA3AF; 
         }
 
         .content {
@@ -94,7 +93,6 @@
 
         .welcome-text.show { opacity: 1; transform: translateY(0); }
         
-        /* --- 按鈕樣式 (已還原為灰色) --- */
         .button-wrapper {
             position: relative; margin-bottom: 1.5rem; transition: transform 0.3s ease;
         }
@@ -105,20 +103,19 @@
         }
         .button-wrapper:hover::before { opacity: 1; }
         
-        /* 這些漸層只影響按鈕背後的「光暈」，按鈕本體還是灰色的 */
         .gradient-blue::before { background: linear-gradient(to right, #9CA3AF, #4B5563); }
         .gradient-purple::before { background: linear-gradient(to right, #D1D5DB, #6B7280); }
         .gradient-green::before { background: linear-gradient(to right, #E5E7EB, #9CA3AF); }
         
         .button {
             position: relative; width: 100%; padding: 1.5rem 2rem;
-            background-color: #4B5563; /* 還原：深灰色按鈕 */
+            background-color: #4B5563; 
             color: #FFFFFF; border-radius: 1rem;
             border: none; font-size: 1.5rem; font-weight: 700;
             display: flex; align-items: center; justify-content: space-between;
             overflow: hidden; cursor: pointer; transition: all 0.3s ease-in-out;
         }
-        .button:hover { background: #374151; } /* Hover 時稍微變深 */
+        .button:hover { background: #374151; } 
         
         .button-text { display: flex; align-items: center; }
         .button-icon { width: 1.5rem; height: 1.5rem; margin-right: 0.75rem; transition: transform 0.3s ease; }
@@ -196,61 +193,63 @@
         </div>
     </div>
 
-    <script>
-        const welcomeText = document.getElementById('welcomeText');
-        const headerTitle = document.getElementById('header-title');
+   <script>
+const headerTitle = document.getElementById('header-title');
 
-        async function updateHeaderWithStatus() {
-            headerTitle.innerHTML = "正在讀取待審核數...";
+const CACHE_KEY = 'pendingCount';
+const CACHE_TIME_KEY = 'pendingCountTime';
+const CACHE_EXPIRE = 60 * 1000; // 1 分鐘
 
-            const targetUrl = 'https://ddjh-anony.forteens.cc';
-            const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}&rand=${Math.random()}`;
+(function showCacheFirst() {
+  const cached = localStorage.getItem(CACHE_KEY);
+  if (cached !== null) {
+    headerTitle.innerHTML = `待審核: <span class="count-badge">${cached}</span> 篇`;
+  } else {
+    headerTitle.innerText = '匿名大墩';
+  }
+})();
 
-            try {
-                const response = await fetch(proxyUrl);
-                if (!response.ok) throw new Error('Proxy Network Error');
-                
-                const data = await response.json();
-                if (!data.contents) throw new Error('Empty Content');
+       async function updateHeaderWithStatus() {
+  const lastTime = localStorage.getItem(CACHE_TIME_KEY);
+  if (lastTime && Date.now() - lastTime < CACHE_EXPIRE) {
+    return; 
+  }
 
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(data.contents, 'text/html');
+  const targetUrl = 'https://ddjh-anony.forteens.cc';
+  const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
 
-                const allSpans = doc.querySelectorAll('span');
-                let foundNumber = null;
+  try {
+    const res = await fetch(proxyUrl, { cache: 'no-store' });
+    const data = await res.json();
+    if (!data.contents) return;
 
-                for (let span of allSpans) {
-                    if (span.textContent.trim() === '待審核') {
-                        const parentText = span.parentElement ? span.parentElement.innerText : '';
-                        const match = parentText.match(/(\d+)/); 
-                        if (match) {
-                            foundNumber = match[0];
-                            break; 
-                        }
-                    }
-                }
+    const doc = new DOMParser().parseFromString(data.contents, 'text/html');
 
-                if (foundNumber !== null) {
-                    // 顯示數字，樣式已更新為銀白色
-                    headerTitle.innerHTML = `待審核: <span class="count-badge">${foundNumber}</span> 篇`;
-                } else {
-                    headerTitle.innerText = "匿名大墩 (無法取得數據)";
-                }
+    const elements = [...doc.querySelectorAll('*')];
+    const target = elements.find(el => el.textContent.includes('待審核'));
 
-            } catch (error) {
-                console.error('Fetch error:', error);
-                headerTitle.innerText = "匿名大墩";
-            }
-        }
+    if (!target) return;
 
-        window.onload = () => {
-            setTimeout(() => {
-                welcomeText.classList.add('show');
-            }, 1000);
-            
-            updateHeaderWithStatus();
-        };
-    </script>
+    const match = target.textContent.match(/(\d+)/);
+    if (!match) return;
+
+    const count = match[1];
+
+    headerTitle.innerHTML = `待審核: <span class="count-badge">${count}</span> 篇`;
+
+    localStorage.setItem(CACHE_KEY, count);
+    localStorage.setItem(CACHE_TIME_KEY, Date.now());
+
+  } catch (e) {
+    console.log('讀取失敗，但不影響使用');
+  }
+}
+
+window.addEventListener('load', () => {
+  setTimeout(updateHeaderWithStatus, 300); // 不阻塞畫面
+});
+</script>
+
     <footer class="footer">
         © 2025 匿名大墩 All Rights Reserved. <br>
         Designed by 恩睿 (管理員 Rain)
