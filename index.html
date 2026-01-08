@@ -6,141 +6,45 @@
 <title>匿名大墩</title>
 <link rel="icon" type="image/png" href="https://ddjhanony.github.io/images/ui.png">
 <style>
-body, html {
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    overflow-x: hidden;
-    background: #F3F4F6;
-}
-.app {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 1.5cm 1.5rem 1.5rem 1.5rem;
-    width: 100%;
-    box-sizing: border-box;
-}
-.header {
-    background-color: #5B5B5B;
-    color: #FFFFFF;
-    padding: 1rem;
-    width: 100%;
-    text-align: center;
-    transition: transform 0.3s;
-    box-sizing: border-box;
-    margin-bottom: 0.5rem;
-    min-height: 3.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-}
-.header:hover {
-    transform: scale(1.02);
-}
-.header h2 {
-    color: white;
-    margin: 0;
-    font-size: 1.2rem;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    font-variant-numeric: tabular-nums;
-}
-.count-badge {
-    background-color: #E5E7EB;
-    color: #374151;
-    padding: 0.2rem 0.6rem;
-    border-radius: 6px;
-    margin: 0 0.5rem;
-    font-weight: 800;
-    font-size: 0.9em;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.3);
-    border: 1px solid #9CA3AF;
-}
-.content {
-    width: 100%;
-    max-width: 28rem;
-    margin-top: 0rem;
-}
-.welcome-text {
-    font-size: 2.2rem;
-    font-weight: 800;
-    text-align: center;
-    margin-bottom: 4rem;
-    color: #1F2937;
-    animation: fadeInDown 1s ease forwards;
-}
-@keyframes fadeInDown {
-    from { opacity: 0; transform: translateY(-50px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-.welcome-text.show { opacity: 1; transform: translateY(0); }
-.button-wrapper { position: relative; margin-bottom: 1.5rem; transition: transform 0.3s ease; }
-.button-wrapper:hover { transform: translateY(-5px); }
-.button-wrapper::before { content: ''; position: absolute; inset: 0; border-radius: 1rem; opacity: 0.75; filter: blur(1rem); transition: opacity 1s; }
-.button-wrapper:hover::before { opacity: 1; }
-.gradient-blue::before { background: linear-gradient(to right, #9CA3AF, #4B5563); }
-.gradient-purple::before { background: linear-gradient(to right, #D1D5DB, #6B7280); }
-.gradient-green::before { background: linear-gradient(to right, #E5E7EB, #9CA3AF); }
-.button {
-    position: relative; width: 100%; padding: 1.5rem 2rem;
-    background-color: #4B5563; color: #FFFFFF; border-radius: 1rem;
-    border: none; font-size: 1.5rem; font-weight: 700;
-    display: flex; align-items: center; justify-content: space-between;
-    overflow: hidden; cursor: pointer; transition: all 0.3s ease-in-out;
-}
-.button:hover { background: #374151; }
-.button-text { display: flex; align-items: center; }
-.button-icon { width: 1.5rem; height: 1.5rem; margin-right: 0.75rem; transition: transform 0.3s ease; }
-.button:hover .button-icon { transform: rotate(15deg); }
-.chevron { width: 1.75rem; height: 1.75rem; transition: transform 0.3s ease; }
-.button:hover .chevron { transform: translateX(5px); }
-.button::after {
-    content: ''; position: absolute; inset: 0; opacity: 0; transition: opacity 0.3s;
-    top: -3px; left: -3px; right: -3px; bottom: -3px;
-    background: linear-gradient(135deg, #9CA3AF, #374151);
-    border-radius: inherit; z-index: -1; filter: blur(8px); opacity: 0.8;
-}
-.button:hover::after { opacity: 0.2; }
-.logo-link { display: block; text-align: center; }
-.welcome-image { display: block; margin: 0.5rem auto 2rem auto; max-width: 200px; height: auto; }
-.footer { text-align: center; padding: 13px 0; font-size: 14px; color: #6b7280; background-color: #f9fafb; line-height: 1.6; }
-
-/* --- 點點動畫 --- */
-.loading-dots {
-    cursor: pointer;
-    user-select: none;
-}
-.loading-dots::after {
-    content: '';
-    animation: dots 1.5s steps(3, end) infinite;
-}
-@keyframes dots {
-    0%   { content: ''; }
-    33%  { content: '.'; }
-    66%  { content: '..'; }
-    100% { content: '...'; }
-}
-.loading-dots:hover {
-    text-decoration: underline;
-    opacity: 0.85;
-}
+body, html {margin:0;padding:0;font-family:Arial,sans-serif;height:100%;width:100%;display:flex;flex-direction:column;background:#F3F4F6;}
+.app {flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:1.5cm 1.5rem 1.5rem 1.5rem;width:100%;box-sizing:border-box;}
+.header {background-color:#5B5B5B;color:#fff;padding:1rem;width:100%;text-align:center;transition:transform 0.3s;box-sizing:border-box;margin-bottom:0.5rem;min-height:3.5rem;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+.header:hover {transform:scale(1.02);}
+.header h2 {color:white;margin:0;font-size:1.2rem;text-shadow:2px 2px 4px rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;flex-wrap:wrap;font-variant-numeric:tabular-nums;}
+.count-badge {background-color:#E5E7EB;color:#374151;padding:0.2rem 0.6rem;border-radius:6px;margin:0 0.5rem;font-weight:800;font-size:0.9em;box-shadow:0 1px 2px rgba(0,0,0,0.3);border:1px solid #9CA3AF;}
+.content {width:100%;max-width:28rem;margin-top:0rem;}
+.welcome-text {font-size:2.2rem;font-weight:800;text-align:center;margin-bottom:4rem;color:#1F2937;animation:fadeInDown 1s ease forwards;}
+@keyframes fadeInDown {from{opacity:0;transform:translateY(-50px);} to{opacity:1;transform:translateY(0);}}
+.welcome-text.show{opacity:1;transform:translateY(0);}
+.button-wrapper{position:relative;margin-bottom:1.5rem;transition:transform 0.3s ease;}
+.button-wrapper:hover{transform:translateY(-5px);}
+.button-wrapper::before{content:'';position:absolute;inset:0;border-radius:1rem;opacity:0.75;filter:blur(1rem);transition:opacity 1s;}
+.button-wrapper:hover::before{opacity:1;}
+.gradient-blue::before{background:linear-gradient(to right,#9CA3AF,#4B5563);}
+.gradient-purple::before{background:linear-gradient(to right,#D1D5DB,#6B7280);}
+.gradient-green::before{background:linear-gradient(to right,#E5E7EB,#9CA3AF);}
+.button{position:relative;width:100%;padding:1.5rem 2rem;background-color:#4B5563;color:#fff;border-radius:1rem;border:none;font-size:1.5rem;font-weight:700;display:flex;align-items:center;justify-content:space-between;overflow:hidden;cursor:pointer;transition:all 0.3s ease-in-out;}
+.button:hover{background:#374151;}
+.button-text{display:flex;align-items:center;}
+.button-icon{width:1.5rem;height:1.5rem;margin-right:0.75rem;transition:transform 0.3s ease;}
+.button:hover .button-icon{transform:rotate(15deg);}
+.chevron{width:1.75rem;height:1.75rem;transition:transform 0.3s ease;}
+.button:hover .chevron{transform:translateX(5px);}
+.button::after{content:'';position:absolute;inset:0;opacity:0;transition:opacity 0.3s;top:-3px;left:-3px;right:-3px;bottom:-3px;background:linear-gradient(135deg,#9CA3AF,#374151);border-radius:inherit;z-index:-1;filter:blur(8px);opacity:0.8;}
+.button:hover::after{opacity:0.2;}
+.logo-link{display:block;text-align:center;}
+.welcome-image{display:block;margin:0.5rem auto 2rem auto;max-width:200px;height:auto;}
+.footer{text-align:center;padding:13px 0;font-size:14px;color:#6b7280;background-color:#f9fafb;line-height:1.6;}
+.loading-dots{cursor:pointer;user-select:none;}
+.loading-dots::after{content:'';animation:dots 1.5s steps(3,end) infinite;}
+@keyframes dots{0%{content:'';}33%{content:'.';}66%{content:'..';}100%{content:'...';}}
+.loading-dots:hover{text-decoration:underline;opacity:0.85;}
 </style>
 </head>
 <body>
 
-<div class="header" onclick="location.reload()">
-    <h2 id="header-title">匿名大墩</h2>
+<div class="header" onclick="forceReload()">
+    <h2 id="header-title"><span class="loading-dots">資料更新中</span></h2>
 </div>
 
 <div id="app" class="app">
@@ -151,6 +55,7 @@ body, html {
 
         <h1 id="welcomeText" class="welcome-text show">歡迎使用匿名大墩</h1>
 
+        <!-- 保留原本 SVG -->
         <div class="button-wrapper gradient-blue">
             <button class="button" onclick="window.location.href='https://sites.google.com/view/ddjh-anony'">
                 <span class="button-text">
@@ -161,27 +66,38 @@ body, html {
                     </svg>
                     官網
                 </span>
-                <svg xmlns="http://www.w3.org/2000/svg" class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
             </button>
         </div>
 
         <div class="button-wrapper gradient-purple">
             <button class="button" onclick="window.location.href='https://ddjh-anony.forteens.cc'">
                 <span class="button-text">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="button-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="button-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
                     投稿連結
                 </span>
-                <svg xmlns="http://www.w3.org/2000/svg" class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
             </button>
         </div>
 
         <div class="button-wrapper gradient-green">
             <button class="button" onclick="window.location.href='https://sites.google.com/view/ddjh-anony/%E5%8C%BF%E5%90%8D%E5%A4%A7%E5%A2%A9%E7%9B%B8%E9%97%9C%E8%A6%8F%E7%AF%84/%E5%B7%B2%E7%99%BC%E5%B8%83%E6%8A%95%E7%A8%BF%E5%88%AA%E9%99%A4%E8%A6%8F%E7%AF%84?authuser=0'">
                 <span class="button-text">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="button-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="button-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="2" y1="12" x2="22" y2="12"></line>
+                    </svg>
                     刪文申請表
                 </span>
-                <svg xmlns="http://www.w3.org/2000/svg" class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
             </button>
         </div>
 
@@ -194,64 +110,49 @@ body, html {
 </footer>
 
 <script>
-const welcomeText = document.getElementById('welcomeText');
 const headerTitle = document.getElementById('header-title');
+const apiUrl = 'https://ddjh-pending.ddjh-love.workers.dev'; // ←換成你的 Worker
 
-// 快取設定
-const CACHE_KEY = 'pendingCount';
-const CACHE_TIME_KEY = 'pendingTime';
-const CACHE_EXPIRE = 60 * 1000; // 1 分鐘
-
-// Worker API 網址 → 換成你自己的
-const apiUrl = 'https://ddjh-pending.ddjh-love.workers.dev';
-
-// 顯示 loading
 function showLoading() {
     headerTitle.innerHTML = '<span class="loading-dots" onclick="forceReload()">資料更新中</span>';
 }
 
-// 強制重新抓取（點擊）
 function forceReload() {
-    localStorage.removeItem(CACHE_TIME_KEY);
+    localStorage.removeItem('pendingTime');
     showLoading();
     updatePendingCount(true);
 }
 
-// 初始化顯示
-(function() {
-    const cached = localStorage.getItem(CACHE_KEY);
-    if (cached) {
-        headerTitle.innerHTML = `待審核: <span class="count-badge">${cached}</span> 篇`;
-    } else {
-        showLoading();
-    }
-})();
-
-async function updatePendingCount(force = false) {
+async function updatePendingCount(force=false) {
     const lastTime = localStorage.getItem('pendingTime');
-    if (!force && lastTime && Date.now() - lastTime < 60000) return;
+    if(!force && lastTime && Date.now() - lastTime < 30000) return;
 
+    showLoading();
     try {
-        const res = await fetch(apiUrl, { cache: 'no-store' });
+        const res = await fetch(apiUrl, {cache:'no-store'});
         const data = await res.json();
         const count = data.pending || "0";
 
         headerTitle.innerHTML = `待審核: <span class="count-badge">${count}</span> 篇`;
         localStorage.setItem('pendingCount', count);
         localStorage.setItem('pendingTime', Date.now());
-    } catch (e) {
+    } catch(e) {
         console.log('抓取失敗', e);
-        headerTitle.innerHTML = '<span class="loading-dots" onclick="forceReload()">資料更新中</span>';
+        showLoading();
     }
 }
 
-window.onload = () => {
-    setTimeout(() => {
-        welcomeText.classList.add('show');
-    }, 1000);
+// 首次顯示快取
+(function() {
+    const cached = localStorage.getItem('pendingCount');
+    if(cached) headerTitle.innerHTML = `待審核: <span class="count-badge">${cached}</span> 篇`;
+})();
 
+window.onload = () => {
     updatePendingCount();
+    setInterval(updatePendingCount, 30000);
 };
 </script>
+
 </body>
 </html>
