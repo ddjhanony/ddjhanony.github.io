@@ -196,12 +196,12 @@
         </div>
     </div>
 
-   <script>
+<script>
         const welcomeText = document.getElementById('welcomeText');
         const countdownElement = document.getElementById('countdown');
         const statusElement = document.getElementById('pending-status-bar');
 
-        // 更新倒數計時
+        // 更新倒數計時 (維持不變)
         function updateTimer() {
             const now = new Date();
             const target = new Date("2026-01-01T00:00:00+08:00");
@@ -211,90 +211,83 @@
                 countdownElement.innerText = "新年快樂！";
                 return;
             }
-
             const hours = Math.floor(diff / (1000 * 60 * 60));
             const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-            const h = String(hours).padStart(2, '0');
-            const m = String(minutes).padStart(2, '0');
-            const s = String(seconds).padStart(2, '0');
-
-            countdownElement.innerText = `距離 2026 還有 ${h}:${m}:${s}`;
+            countdownElement.innerText = `距離 2026 還有 ${String(hours).padStart(2,'0')}:${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
         }
 
-        // 新增：抓取待審核文章數量 (改良版)
-        async function fetchPendingPosts() {
+        // --- 核心功能：抓取待審核數量 (含重試機制) ---
+        async function fetchPendingPosts(retries = 3) {
             const targetUrl = 'https://ddjh-anony.forteens.cc';
-            
-            // 改用 'get' 模式，這會回傳 JSON 格式，比較不會被瀏覽器當作跨域攻擊擋掉
-            // 加入時間戳記 time=${Date.now()} 避免讀到舊的快取資料
+            // 使用 AllOrigins 的 JSON 模式
             const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}&time=${Date.now()}`;
 
+            // 顯示讀取狀態 (只有第一次顯示)
+            if (statusElement.innerText === '讀取中...') {
+                statusElement.style.display = 'block';
+            }
+
             try {
-                statusElement.style.display = 'block'; // 顯示讀取中...
-                
                 const response = await fetch(proxyUrl);
-                if (!response.ok) throw new Error('Proxy Network Error');
+                if (!response.ok) throw new Error('Proxy error');
                 
-                const data = await response.json(); // 先解析成 JSON
-                const htmlContent = data.contents;  // 真正的 HTML 在 contents 欄位裡
+                const data = await response.json();
+                if (!data.contents) throw new Error('No content');
 
-                if (!htmlContent) throw new Error('Empty Content');
-
-                // 開始解析 HTML
                 const parser = new DOMParser();
-                const doc = parser.parseFromString(htmlContent, 'text/html');
+                const doc = parser.parseFromString(data.contents, 'text/html');
 
-                // --- 搜尋邏輯 ---
-                // 策略：尋找所有包含「待審核」文字的元素
-                // 根據經驗，這種數值通常會跟文字放在一起，或是放在旁邊的 span
-                const allElements = doc.body.getElementsByTagName('*');
-                let pendingCount = null;
+                // --- 改良後的精準定位邏輯 ---
+                // 根據您提供的 code: <div class="... bg-sky-300 ..."> 50 <br> <span>待審核</span> ...
+                // 我們尋找同時包含 "bg-sky-300" 和 "待審核" 的元素
+                
+                // 1. 抓取所有 bg-sky-300 的 div (這是該網站特有的顏色樣式)
+                const potentialElements = doc.querySelectorAll('.bg-sky-300');
+                let foundNumber = null;
 
-                for (let el of allElements) {
-                    // 檢查文字是否包含 "待審核"
-                    if (el.innerText && el.innerText.includes('待審核')) {
-                        // 嘗試抓取該元素內的數字
-                        // 這裡的正則表達式會抓取 "待審核" 附近的數字
-                        const match = el.innerText.match(/(\d+)/); 
-                        if (match) {
-                            pendingCount = match[0];
-                            // 找到數字後，我們可以稍微驗證一下，避免抓到日期
-                            // 例如通常待審核數量不會大於 10000，且字串長度不會太長
-                            if (el.innerText.length < 50) { 
-                                break; 
-                            }
+                for (let el of potentialElements) {
+                    // 2. 檢查裡面有沒有 "待審核" 三個字
+                    if (el.textContent.includes('待審核')) {
+                        // 3. 取得數字。
+                        // 原本結構是: "50<br><span>待審核</span>"
+                        // 所以數字在第一段文字節點 (text node)
+                        // 我們直接用正則表達式把所有非數字的字元清掉，剩下的就是答案
+                        const num = el.innerText.replace(/[^0-9]/g, '');
+                        if (num) {
+                            foundNumber = num;
+                            break; 
                         }
                     }
                 }
 
-                // 顯示結果
-                if (pendingCount !== null) {
-                    statusElement.innerHTML = `目前有 <span class="status-highlight">${pendingCount}</span> 篇投稿待審核`;
+                if (foundNumber !== null) {
+                    statusElement.innerHTML = `目前有 <span class="status-highlight">${foundNumber}</span> 篇投稿待審核`;
+                    statusElement.style.color = "#374151"; // 恢復正常顏色
                 } else {
-                    // 如果抓不到數字，可能代表目標網站改版，或者沒有權限看到數字
-                    // 為了不顯示錯誤訊息破壞美觀，這裡選擇隱藏狀態列，或是顯示一般訊息
-                    statusElement.innerText = "歡迎投稿 (目前無法讀取待審核數)";
-                    console.log("抓取成功但找不到數字，請檢查目標網站結構");
+                    throw new Error('找不到數字結構');
                 }
 
             } catch (error) {
-                console.error('Fetch error:', error);
-                // 失敗時隱藏狀態列，以免顯示醜醜的錯誤訊息，或者顯示替代文字
-                statusElement.innerText = "點擊下方按鈕前往投稿";
+                console.warn(`抓取失敗，剩餘重試次數: ${retries}`, error);
+                
+                if (retries > 0) {
+                    statusElement.innerText = `連線忙碌中，正在重試 (${retries})...`;
+                    // 等待 2 秒後遞迴重試
+                    setTimeout(() => fetchPendingPosts(retries - 1), 2000);
+                } else {
+                    // 真的徹底失敗後的顯示
+                    statusElement.innerHTML = "無法取得數據，<a href='https://ddjh-anony.forteens.cc' target='_blank' style='color: #4B5563; text-decoration: underline;'>點此直接查看</a>";
+                }
             }
         }
 
         window.onload = () => {
-            setTimeout(() => {
-                welcomeText.classList.add('show');
-            }, 1000);
-
+            setTimeout(() => welcomeText.classList.add('show'), 1000);
             updateTimer();
             setInterval(updateTimer, 1000);
             
-            // 啟動抓取資料
+            // 執行抓取
             fetchPendingPosts();
         };
     </script>
