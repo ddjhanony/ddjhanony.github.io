@@ -203,7 +203,7 @@ const CACHE_TIME_KEY = 'pendingTime';
 const CACHE_EXPIRE = 60 * 1000; // 1 分鐘
 
 // Worker API 網址 → 換成你自己的
-const apiUrl = 'https://ddjh-pending.ddjh-love.workers.dev/';
+const apiUrl = 'https://ddjh-pending.ddjh-love.workers.dev';
 
 // 顯示 loading
 function showLoading() {
@@ -227,25 +227,21 @@ function forceReload() {
     }
 })();
 
-// 抓資料
 async function updatePendingCount(force = false) {
-    const lastTime = localStorage.getItem(CACHE_TIME_KEY);
-    if (!force && lastTime && Date.now() - lastTime < CACHE_EXPIRE) return;
+    const lastTime = localStorage.getItem('pendingTime');
+    if (!force && lastTime && Date.now() - lastTime < 60000) return;
 
     try {
         const res = await fetch(apiUrl, { cache: 'no-store' });
         const data = await res.json();
-        if (!data.pending) return;
-
-        const count = data.pending;
+        const count = data.pending || "0";
 
         headerTitle.innerHTML = `待審核: <span class="count-badge">${count}</span> 篇`;
-
-        localStorage.setItem(CACHE_KEY, count);
-        localStorage.setItem(CACHE_TIME_KEY, Date.now());
+        localStorage.setItem('pendingCount', count);
+        localStorage.setItem('pendingTime', Date.now());
     } catch (e) {
-        console.log('抓取失敗');
-        showLoading();
+        console.log('抓取失敗', e);
+        headerTitle.innerHTML = '<span class="loading-dots" onclick="forceReload()">資料更新中</span>';
     }
 }
 
