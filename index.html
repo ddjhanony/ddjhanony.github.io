@@ -196,7 +196,7 @@
         </div>
     </div>
 
-    <script>
+   <script>
         const welcomeText = document.getElementById('welcomeText');
         const countdownElement = document.getElementById('countdown');
         const statusElement = document.getElementById('pending-status-bar');
@@ -223,53 +223,66 @@
             countdownElement.innerText = `距離 2026 還有 ${h}:${m}:${s}`;
         }
 
-        // 新增：抓取待審核文章數量
+        // 新增：抓取待審核文章數量 (改良版)
         async function fetchPendingPosts() {
-            // 使用 AllOrigins 代理服務來繞過 CORS 限制
             const targetUrl = 'https://ddjh-anony.forteens.cc';
-            const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`;
+            
+            // 改用 'get' 模式，這會回傳 JSON 格式，比較不會被瀏覽器當作跨域攻擊擋掉
+            // 加入時間戳記 time=${Date.now()} 避免讀到舊的快取資料
+            const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}&time=${Date.now()}`;
 
             try {
+                statusElement.style.display = 'block'; // 顯示讀取中...
+                
                 const response = await fetch(proxyUrl);
-                if (!response.ok) throw new Error('Network response was not ok');
+                if (!response.ok) throw new Error('Proxy Network Error');
                 
-                const html = await response.text();
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, 'text/html');
+                const data = await response.json(); // 先解析成 JSON
+                const htmlContent = data.contents;  // 真正的 HTML 在 contents 欄位裡
 
-                // --- 關鍵設定區域 ---
-                // 這裡嘗試尋找包含「待審核」文字的元素
-                // 如果您知道確切的 ID 或 Class，請修改下方的一行
-                // 例如：const targetElement = doc.querySelector('.badge-warning'); 
-                
-                // 目前策略：找出所有元素，看誰的文字包含 "待審核" 且後面跟著數字
-                const allElements = doc.body.querySelectorAll('*');
+                if (!htmlContent) throw new Error('Empty Content');
+
+                // 開始解析 HTML
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(htmlContent, 'text/html');
+
+                // --- 搜尋邏輯 ---
+                // 策略：尋找所有包含「待審核」文字的元素
+                // 根據經驗，這種數值通常會跟文字放在一起，或是放在旁邊的 span
+                const allElements = doc.body.getElementsByTagName('*');
                 let pendingCount = null;
 
                 for (let el of allElements) {
-                    // 簡單過濾：尋找文字內容類似 "待審核: 5" 或單純數字在特定結構中
-                    if (el.textContent && el.textContent.includes('待審核')) {
-                        // 嘗試從文字中提取數字
-                        const match = el.textContent.match(/(\d+)/); 
+                    // 檢查文字是否包含 "待審核"
+                    if (el.innerText && el.innerText.includes('待審核')) {
+                        // 嘗試抓取該元素內的數字
+                        // 這裡的正則表達式會抓取 "待審核" 附近的數字
+                        const match = el.innerText.match(/(\d+)/); 
                         if (match) {
                             pendingCount = match[0];
-                            break; // 找到就停止
+                            // 找到數字後，我們可以稍微驗證一下，避免抓到日期
+                            // 例如通常待審核數量不會大於 10000，且字串長度不會太長
+                            if (el.innerText.length < 50) { 
+                                break; 
+                            }
                         }
                     }
                 }
 
                 // 顯示結果
-                statusElement.style.display = 'block';
-                if (pendingCount) {
+                if (pendingCount !== null) {
                     statusElement.innerHTML = `目前有 <span class="status-highlight">${pendingCount}</span> 篇投稿待審核`;
                 } else {
-                    statusElement.innerText = "無法讀取待審核數據 (格式不符)";
+                    // 如果抓不到數字，可能代表目標網站改版，或者沒有權限看到數字
+                    // 為了不顯示錯誤訊息破壞美觀，這裡選擇隱藏狀態列，或是顯示一般訊息
+                    statusElement.innerText = "歡迎投稿 (目前無法讀取待審核數)";
+                    console.log("抓取成功但找不到數字，請檢查目標網站結構");
                 }
 
             } catch (error) {
                 console.error('Fetch error:', error);
-                statusElement.style.display = 'block';
-                statusElement.innerText = "無法連線至投稿網站";
+                // 失敗時隱藏狀態列，以免顯示醜醜的錯誤訊息，或者顯示替代文字
+                statusElement.innerText = "點擊下方按鈕前往投稿";
             }
         }
 
