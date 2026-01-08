@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-TW"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    
+<html lang="zh-TW">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>匿名大墩</title>
-
     <link rel="icon" type="image/png" href="https://ddjhanony.github.io/images/ui.png">
 
     <style>
@@ -38,7 +38,7 @@
             text-align: center;
             transition: transform 0.3s;
             box-sizing: border-box;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0; /* 修改這裡，讓狀態列緊貼 */
         }
         .header:hover {
             transform: scale(1.05);
@@ -54,10 +54,29 @@
             flex-wrap: wrap;
             font-variant-numeric: tabular-nums;
         }
+
+        /* 新增：狀態列樣式 */
+        .status-bar {
+            width: 100%;
+            background-color: #e5e7eb;
+            color: #374151;
+            text-align: center;
+            padding: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 0.5rem;
+            display: none; /* 預設隱藏，抓到資料才顯示 */
+        }
+        .status-highlight {
+            color: #ef4444; /* 紅色強調數字 */
+            font-size: 1.1em;
+        }
+
         .content {
             width: 100%;
             max-width: 28rem;
-            margin-top: 0rem;
+            margin-top: 1rem;
             background: none;
         }
         .welcome-text {
@@ -69,166 +88,80 @@
             animation: fadeInDown 1s ease forwards; 
         }
 
-@keyframes fadeInDown {
-    from {
-        opacity: 0;
-        transform: translateY(-50px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-        .welcome-text.show {
-            opacity: 1;
-            transform: translateY(0);
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
         }
+
+        .welcome-text.show { opacity: 1; transform: translateY(0); }
+        
+        /* Button Styles (保持不變) */
         .button-wrapper {
             position: relative;
             margin-bottom: 1.5rem;
             transition: transform 0.3s ease;
         }
-        .button-wrapper:hover {
-            transform: translateY(-5px);
-        }
+        .button-wrapper:hover { transform: translateY(-5px); }
         .button-wrapper::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: 1rem;
-            opacity: 0.75;
-            filter: blur(1rem);
-            transition: opacity 1s;
+            content: ''; position: absolute; inset: 0; border-radius: 1rem;
+            opacity: 0.75; filter: blur(1rem); transition: opacity 1s;
         }
-        .button-wrapper:hover::before {
-            opacity: 1;
-        }
-        .gradient-blue::before {
-            background: linear-gradient(to right, #9CA3AF, #4B5563);
-        }
-        .gradient-purple::before {
-            background: linear-gradient(to right, #D1D5DB, #6B7280);
-        }
-        .gradient-green::before {
-            background: linear-gradient(to right, #E5E7EB, #9CA3AF);
-        }
+        .button-wrapper:hover::before { opacity: 1; }
+        .gradient-blue::before { background: linear-gradient(to right, #9CA3AF, #4B5563); }
+        .gradient-purple::before { background: linear-gradient(to right, #D1D5DB, #6B7280); }
+        .gradient-green::before { background: linear-gradient(to right, #E5E7EB, #9CA3AF); }
+        
         .button {
-            position: relative;
-            width: 100%;
-            padding: 1.5rem 2rem;
-            background-color: #4B5563;
-            color: #FFFFFF;
-            border-radius: 1rem;
-            border: none;
-            font-size: 1.5rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            overflow: hidden;
-            cursor: pointer;
-            transition: all 0.3s ease-in-out;
+            position: relative; width: 100%; padding: 1.5rem 2rem;
+            background-color: #4B5563; color: #FFFFFF; border-radius: 1rem;
+            border: none; font-size: 1.5rem; font-weight: 700;
+            display: flex; align-items: center; justify-content: space-between;
+            overflow: hidden; cursor: pointer; transition: all 0.3s ease-in-out;
         }
-        .button:hover {
-            background: #374151;
-        }
-        .button-text {
-            display: flex;
-            align-items: center;
-        }
-        .button-icon {
-            width: 1.5rem;
-            height: 1.5rem;
-            margin-right: 0.75rem;
-            transition: transform 0.3s ease;
-        }
-        .button:hover .button-icon {
-            transform: rotate(15deg);
-        }
-        .chevron {
-            width: 1.75rem;
-            height: 1.75rem;
-            transition: transform 0.3s ease;
-        }
-        .button:hover .chevron {
-            transform: translateX(5px);
-        }
+        .button:hover { background: #374151; }
+        .button-text { display: flex; align-items: center; }
+        .button-icon { width: 1.5rem; height: 1.5rem; margin-right: 0.75rem; transition: transform 0.3s ease; }
+        .button:hover .button-icon { transform: rotate(15deg); }
+        .chevron { width: 1.75rem; height: 1.75rem; transition: transform 0.3s ease; }
+        .button:hover .chevron { transform: translateX(5px); }
         .button::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            opacity: 0;
-            transition: opacity 0.3s;
-            top: -3px;
-            left: -3px;
-            right: -3px;
-            bottom: -3px;
+            content: ''; position: absolute; inset: 0; opacity: 0; transition: opacity 0.3s;
+            top: -3px; left: -3px; right: -3px; bottom: -3px;
             background: linear-gradient(135deg, #9CA3AF, #374151);
-            border-radius: inherit;
-            z-index: -1;
-            filter: blur(8px);
-            opacity: 0.8;
+            border-radius: inherit; z-index: -1; filter: blur(8px); opacity: 0.8;
         }
-        .button:hover::after {
-            opacity: 0.2;
-        }
-        .gradient-blue .button::after {
-            background: linear-gradient(to right, #22d3ee, #0ea5e9);
-        }
-        .gradient-purple .button::after {
-            background: linear-gradient(to right, #c084fc, #e879f9);
-        }
-        .gradient-green .button::after {
-            background: linear-gradient(to right, #34d399, #10b981);
-        }
-        .button.active::before {
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 0.75; }
-            50% { opacity: 1; }
-        }
+        .button:hover::after { opacity: 0.2; }
         
-        .logo-link {
-            display: block;
-            text-align: center;
-        }
-
+        .logo-link { display: block; text-align: center; }
         .welcome-image {
-            display: block;        
-            margin: 0.5rem auto 2rem auto; 
-            max-width: 200px;      
-            height: auto;          
+            display: block; margin: 0.5rem auto 2rem auto; 
+            max-width: 200px; height: auto; 
         }
-        
         .footer {
-            text-align: center;
-            padding: 13px 0;
-            font-size: 14px;
-            color: #6b7280;            
-            background-color: #f9fafb; 
-            line-height: 1.6;
+            text-align: center; padding: 13px 0; font-size: 14px;
+            color: #6b7280; background-color: #f9fafb; line-height: 1.6;
         }
-
     </style>
 </head>
 <body>
     <div class="header">
-        <h2 id="countdown">
-            載入中...
-        </h2>
+        <h2 id="countdown">載入中...</h2>
     </div>
+
+    <div id="pending-status-bar" class="status-bar">
+        讀取中...
+    </div>
+
     <div id="app" class="app">
         <div class="content">
-
             <a href="https://ddjh-anony.forteens.cc/admin/login" target="_blank" class="logo-link">
                 <img src="./images/logo2.png" alt="Logo" class="welcome-image">
             </a>
 
             <h1 id="welcomeText" class="welcome-text show">歡迎使用匿名大墩</h1>
+            
             <div class="button-wrapper gradient-blue">
-                <button class="button" onclick="window.location.href=&#39;https://sites.google.com/view/ddjh-anony&#39;">
+                <button class="button" onclick="window.location.href='https://sites.google.com/view/ddjh-anony'">
                     <span class="button-text">
                         <svg xmlns="http://www.w3.org/2000/svg" class="button-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="12" cy="12" r="10"></circle>
@@ -237,48 +170,41 @@
                         </svg>
                         官網
                     </span>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="9 18 15 12 9 6"></polyline>
-                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
                 </button>
             </div>
+            
             <div class="button-wrapper gradient-purple">
-                <button class="button" onclick="window.location.href=&#39;https://ddjh-anony.forteens.cc&#39;">
+                <button class="button" onclick="window.location.href='https://ddjh-anony.forteens.cc'">
                     <span class="button-text">
                         <svg xmlns="http://www.w3.org/2000/svg" class="button-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
                         投稿連結
                     </span>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="9 18 15 12 9 6"></polyline>
-                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
                 </button>
             </div>
+            
             <div class="button-wrapper gradient-green">
-                <button class="button" onclick="window.location.href=&#39;https://sites.google.com/view/ddjh-anony/%E5%8C%BF%E5%90%8D%E5%A4%A7%E5%A2%A9%E7%9B%B8%E9%97%9C%E8%A6%8F%E7%AF%84/%E5%B7%B2%E7%99%BC%E5%B8%83%E6%8A%95%E7%A8%BF%E5%88%AA%E9%99%A4%E8%A6%8F%E7%AF%84?authuser=0&#39;">
+                <button class="button" onclick="window.location.href='https://sites.google.com/view/ddjh-anony/%E5%8C%BF%E5%90%8D%E5%A4%A7%E5%A2%A9%E7%9B%B8%E9%97%9C%E8%A6%8F%E7%AF%84/%E5%B7%B2%E7%99%BC%E5%B8%83%E6%8A%95%E7%A8%BF%E5%88%AA%E9%99%A4%E8%A6%8F%E7%AF%84?authuser=0'">
                     <span class="button-text">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="button-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-  <circle cx="12" cy="12" r="10"></circle>
-  <line x1="2" y1="12" x2="22" y2="12"></line>
-</svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="button-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line></svg>
                         刪文申請表
                     </span>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="9 18 15 12 9 6"></polyline>
-                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
                 </button>
             </div>
         </div>
     </div>
+
     <script>
         const welcomeText = document.getElementById('welcomeText');
         const countdownElement = document.getElementById('countdown');
+        const statusElement = document.getElementById('pending-status-bar');
 
-
+        // 更新倒數計時
         function updateTimer() {
             const now = new Date();
-
             const target = new Date("2026-01-01T00:00:00+08:00");
-            
             const diff = target - now;
 
             if (diff <= 0) {
@@ -287,7 +213,6 @@
             }
 
             const hours = Math.floor(diff / (1000 * 60 * 60));
-            // 剩下的分鐘與秒數
             const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
@@ -298,6 +223,56 @@
             countdownElement.innerText = `距離 2026 還有 ${h}:${m}:${s}`;
         }
 
+        // 新增：抓取待審核文章數量
+        async function fetchPendingPosts() {
+            // 使用 AllOrigins 代理服務來繞過 CORS 限制
+            const targetUrl = 'https://ddjh-anony.forteens.cc';
+            const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`;
+
+            try {
+                const response = await fetch(proxyUrl);
+                if (!response.ok) throw new Error('Network response was not ok');
+                
+                const html = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+
+                // --- 關鍵設定區域 ---
+                // 這裡嘗試尋找包含「待審核」文字的元素
+                // 如果您知道確切的 ID 或 Class，請修改下方的一行
+                // 例如：const targetElement = doc.querySelector('.badge-warning'); 
+                
+                // 目前策略：找出所有元素，看誰的文字包含 "待審核" 且後面跟著數字
+                const allElements = doc.body.querySelectorAll('*');
+                let pendingCount = null;
+
+                for (let el of allElements) {
+                    // 簡單過濾：尋找文字內容類似 "待審核: 5" 或單純數字在特定結構中
+                    if (el.textContent && el.textContent.includes('待審核')) {
+                        // 嘗試從文字中提取數字
+                        const match = el.textContent.match(/(\d+)/); 
+                        if (match) {
+                            pendingCount = match[0];
+                            break; // 找到就停止
+                        }
+                    }
+                }
+
+                // 顯示結果
+                statusElement.style.display = 'block';
+                if (pendingCount) {
+                    statusElement.innerHTML = `目前有 <span class="status-highlight">${pendingCount}</span> 篇投稿待審核`;
+                } else {
+                    statusElement.innerText = "無法讀取待審核數據 (格式不符)";
+                }
+
+            } catch (error) {
+                console.error('Fetch error:', error);
+                statusElement.style.display = 'block';
+                statusElement.innerText = "無法連線至投稿網站";
+            }
+        }
+
         window.onload = () => {
             setTimeout(() => {
                 welcomeText.classList.add('show');
@@ -305,12 +280,14 @@
 
             updateTimer();
             setInterval(updateTimer, 1000);
+            
+            // 啟動抓取資料
+            fetchPendingPosts();
         };
     </script>
-       <footer class="footer">
-           © 2025 匿名大墩 All Rights Reserved. <br>
-           Designed by 恩睿 (管理員 Rain)
-       </footer>
-
-
-<div id="trend_notification_app" class="trend_notification_app_outer"><div id="trend_notification"><div id="trend_notification_con"></div></div></div><div id="UMS_TOOLTIP" style="position: absolute; cursor: pointer; z-index: 2147483647; background: transparent; top: -100000px; left: -100000px;"></div></body><umsdataelement id="UMSDataElement" style="display: none;"></umsdataelement><div id="tmtoolbar_manual_rating_injected" style="display: none;">init</div><div id="UMSSendDataEventElement" style="display: none;">init</div></html>
+    <footer class="footer">
+        © 2025 匿名大墩 All Rights Reserved. <br>
+        Designed by 恩睿 (管理員 Rain)
+    </footer>
+</body>
+</html>
