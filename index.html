@@ -114,8 +114,8 @@ body, html {margin:0;padding:0;font-family:Arial,sans-serif;height:100%;width:10
 <script>
     // 倒數計時器邏輯
     function updateCountdown() {
-        // 目標日期與時間： 2026年5月16日 08:20:00
-        const targetDate = new Date('2026-05-16T08:20:00').getTime();
+        // 目標日期與時間
+        const targetDate = new Date('2026-06-10T00:00:00').getTime();
         const now = new Date().getTime();
         const distance = targetDate - now;
 
@@ -123,7 +123,7 @@ body, html {margin:0;padding:0;font-family:Arial,sans-serif;height:100%;width:10
 
         // 如果時間已到或超過
         if (distance <= 0) {
-            displayElement.innerText = '會考加油.ᐟ.ᐟ';
+            displayElement.innerText = '畢業快樂.ᐟ.ᐟ';
             return; // 停止執行後續計算
         }
 
@@ -135,13 +135,13 @@ body, html {margin:0;padding:0;font-family:Arial,sans-serif;height:100%;width:10
 
         // 依照要求自動切換單位
         if (days > 0) {
-            displayElement.innerText = `115國中教育會考倒數： ${days} 天`;
+            displayElement.innerText = `畢業倒數： ${days} 天`;
         } else if (hours > 0) {
-            displayElement.innerText = `115國中教育會考倒數： ${hours} 小時`;
+            displayElement.innerText = `畢業倒數： ${hours} 小時`;
         } else if (minutes > 0) {
-            displayElement.innerText = `115國中教育會考倒數： ${minutes} 分`;
+            displayElement.innerText = `畢業倒數： ${minutes} 分`;
         } else {
-            displayElement.innerText = `115國中教育會考倒數： ${seconds} 秒`;
+            displayElement.innerText = `畢業倒數： ${seconds} 秒`;
         }
     }
 
